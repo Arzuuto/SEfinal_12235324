@@ -38,11 +38,39 @@ def addBook(book, apiKey):
 apiKey = getAuthToken()
 
 # Using the faker module, generate random "fake" books
-fake = Faker()
-for i in range(4, 105):
-    fakeTitle = fake.catch_phrase()
-    fakeAuthor = fake.name()
-    fakeISBN = fake.isbn13()
-    book = {"id":i, "title": fakeTitle, "author": fakeAuthor, "isbn": fakeISBN}
-    # add the new random "fake" book using the API
-    addBook(book, apiKey) 
+# fake = Faker()
+# for i in range(4, 105):
+#     fakeTitle = fake.catch_phrase()
+#     fakeAuthor = fake.name()
+#     fakeISBN = fake.isbn13()
+#     book = {"id":i, "title": fakeTitle, "author": fakeAuthor, "isbn": fakeISBN}
+#     # add the new random "fake" book using the API
+#     addBook(book, apiKey)
+url = "http://library.demo.local/api/v1/books"
+
+payload = ""
+headers = {}
+
+response = requests.request("GET", url, headers=headers, data=payload)
+res = response.json()
+headers = {
+    'Content-Type': 'application/json',
+    'X-API-Key': apiKey
+}
+
+#Delete first books
+for i in range (0,5):
+    payload = json.dumps(res[i])
+    print(res[i])
+    url = "http://library.demo.local/api/v1/books/" + str(res[i]["id"])
+    print(url)
+    response = requests.request("DELETE", url, headers=headers, data=payload)
+    print(response.json)
+#Delete five books
+for i in range (0,5):
+    payload = json.dumps(res[-i])
+    print(res[i])
+    url = "http://library.demo.local/api/v1/books/" + str(res[i]["id"])
+    print(url)
+    response = requests.request("DELETE", url, headers=headers, data=payload)
+    print(response.json)
